@@ -1,0 +1,14 @@
+{
+  "name": "twitch",
+  "version": "1.0.0",
+  "description": "Scripts for chat commands I use on my stream",
+  "main": "script.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Angelo Gazzola <angelo@nglgzz.com> (https://github.com/nglgzz)",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.1"
+  }
+}
