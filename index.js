@@ -34,7 +34,7 @@ app.get('/play', (req, res) => {
   let output = stdout => res.send(stdout);
 
   // URL was specified, the user wants to change track.
-  if (req.query.url) {
+  if (req.query.url && req.query.url !== 'null') {
     let { url } = req.query;
 
     try {
