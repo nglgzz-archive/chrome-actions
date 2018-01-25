@@ -4,6 +4,10 @@ const express = require('express');
 const { exec } = require('child_process');
 
 const app = express();
+const memeSongs = [
+  'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+  'https://www.youtube.com/watch?v=y6120QOlsfU',
+];
 
 // List all open tabs on Chromium, get the first tab playing YouTube, get rid of
 // the ID of the tab, strip the "- YouTube" part from the title of the tab,
@@ -47,6 +51,13 @@ app.get('/play', (req, res) => {
     if (url.hostname !== 'www.youtube.com') {
       res.send('Only YouTube links are allowed.');
       return;
+    }
+
+    // Let's add some uncertainty. Here there's a small chance the URL
+    // will change to a meme song.
+    const rnd = Math.random();
+    if (rnd < 0.25) {
+      const rndIndex = Math.floor(Math.random() * memeSongs.length);       url = memeSongs[rndIndex];
     }
 
     command = changeTrack(url);
