@@ -7,6 +7,7 @@ const app = express();
 const memeSongs = [
   'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
   'https://www.youtube.com/watch?v=y6120QOlsfU',
+  'https://www.youtube.com/watch?v=btPJPFnesV4',
 ];
 
 // List all open tabs on Chromium, get the first tab playing YouTube, get rid of
@@ -44,6 +45,28 @@ app.get('/play', (req, res) => {
     try {
       url = new URL(url);
     } catch (err) {
+      if (url === 'meme') {
+        const rndIndex = Math.floor(Math.random() * memeSongs.length);
+        url = memeSongs[rndIndex];
+
+        command = changeTrack(url);
+        output = () => res.send('Thank you for your song request!');
+
+        // Run the command and return the output.
+        exec(command, (err, stdout, stderr) => {
+          if (err) {
+            console.log(err);
+            res.status(500).send('Whoops.. There was a problem.');
+            return;
+          }
+
+          console.log('stderr: ', stderr);
+          console.log('stdout: ', stdout);
+          output(stdout);
+        });
+        return
+      }
+
       res.send(`The link you specified is not valid.`);
       return;
     }
@@ -57,7 +80,8 @@ app.get('/play', (req, res) => {
     // will change to a meme song.
     const rnd = Math.random();
     if (rnd < 0.25) {
-      const rndIndex = Math.floor(Math.random() * memeSongs.length);       url = memeSongs[rndIndex];
+      const rndIndex = Math.floor(Math.random() * memeSongs.length);
+      url = memeSongs[rndIndex];
     }
 
     command = changeTrack(url);
