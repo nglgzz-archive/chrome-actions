@@ -4,6 +4,12 @@ const express = require('express');
 const { exec } = require('child_process');
 
 const app = express();
+const allowedDomains = [
+  'www.youtube.com',
+  'youtu.be',
+];
+
+
 const memeSongs = [
   'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
   'https://www.youtube.com/watch?v=y6120QOlsfU',
@@ -71,7 +77,7 @@ app.get('/play', (req, res) => {
       return;
     }
 
-    if (url.hostname !== 'www.youtube.com') {
+    if (!allowedDomains.includes(url.hostname)) {
       res.send('Only YouTube links are allowed.');
       return;
     }
@@ -102,5 +108,9 @@ app.get('/play', (req, res) => {
   });
 });
 
+app.get('/', (req, res) => {
+  res.send('Use !commands to see the available commands (this one does nothing).');
+});
 
-app.listen(4444, () => console.log('magic on port 4444'));
+
+app.listen(8268, () => console.log('magic on port 8268'));
