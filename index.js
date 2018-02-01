@@ -2,6 +2,8 @@ const URL = require('url').URL;
 const express = require('express');
 // Used for executing bash commands
 const { exec } = require('child_process');
+const randomSong = require('./randomSong');
+
 
 const app = express();
 const allowedDomains = [
@@ -125,6 +127,30 @@ app.get('/play', (req, res) => {
     console.log('stderr: ', stderr);
     console.log('stdout: ', stdout);
     output(stdout);
+  });
+});
+
+// Plays a random song.
+app.get('/random', (req, res) => {
+  // Get random song URL
+  randomSong().then(({ url, name }) => {
+    if (!url) {
+      res.send('Sorry could generate a random song. Try again.');
+      return;
+    }
+
+    // Run the command and return the output.
+    exec(changeTrack(url), (err, stdout, stderr) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send('Whoops.. There was a problem.');
+        return;
+      }
+
+      console.log('stderr: ', stderr);
+      console.log('stdout: ', stdout);
+      res.send(`Now playing: ${name}`);
+    });
   });
 });
 

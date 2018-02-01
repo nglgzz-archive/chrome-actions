@@ -9,6 +9,8 @@
   "author": "Angelo Gazzola <angelo@nglgzz.com> (https://github.com/nglgzz)",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.16.1"
+    "axios": "^0.17.1",
+    "express": "^4.16.1",
+    "random-words": "^1.0.0"
   }
 }
