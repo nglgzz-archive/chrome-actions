@@ -60,6 +60,27 @@ app.get('/next', (req, res) => {
   });
 });
 
+app.get('/playpause', (req, res) => {
+  const command = `
+    tab=$(chromix-too ls | grep youtube | head -n1 | cut -f 1 -d ' '); \\
+    chromix-too raw 'chrome.tabs.executeScript' $tab '{"code": "document.querySelector(\\".ytp-play-button\\").click();"}'
+  `;
+
+  // Run the command and return the output.
+  exec(command, (err, stdout, stderr) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Whoops.. There was a problem.');
+      return;
+    }
+
+    console.log('stderr: ', stderr);
+    console.log('stdout: ', stdout);
+    res.send("The current song is now playing/paused");
+  });
+});
+
+
 // Return the song playing if no URL is specified, otherwise change the current
 // song.
 app.get('/play', (req, res) => {
