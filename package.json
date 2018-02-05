@@ -4,7 +4,7 @@
   "description": "Scripts for chat commands I use on my stream",
   "main": "script.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node server.js"
   },
   "author": "Angelo Gazzola <angelo@nglgzz.com> (https://github.com/nglgzz)",
   "license": "MIT",
