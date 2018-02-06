@@ -1,9 +1,12 @@
 const express = require('express');
 const api = require('./api/index');
 
+const host = process.env.TWITCH_HOST || '0.0.0.0';
+const port = 8268;
 
 const app = express();
 app.use('/', api);
 
 
-app.listen(8268, () => console.log('magic on port 8268'));
+app.listen(port, host, () => console.log(`magic at ${host}:${port}`));
+
