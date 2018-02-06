@@ -12,15 +12,19 @@ npm install
 npm start
 ```
 
-The commands will be available on http://localhost:4444
+The commands will be available on http://localhost:8268
 
 
 ## Commands
-For now there's just two commands for songs, I will probably add more later on.
 Below you can find all endpoints you can call, the arguments they accept and a
 description of what they do.
 
-| Enpoint  | Args   | Description                                                               |
-|----------|:------:|---------------------------------------------------------------------------|
-| /play    | -      | Return the name and URL for the current song                              |
-| /play    | `url`  | Change the current song to the specified URL (accepts only YouTube links) |
+| Enpoint         | Args  | Description                                                               |
+|-----------------|:-----:|---------------------------------------------------------------------------|
+| /               | -     | Get a list of commands                                                    |
+| /music/info     | -     | Return the name and URL for the current song                              |
+| /music/pause    | -     | Pause/Play the current song                                               |
+| /music/previous | -     | Play the previous song                                                    |
+| /music/next     | -     | Play the next song                                                        |
+| /music/change   | `url` | Change the current song to the specified URL (accepts only YouTube links) |
+| /music/random   | -     | Play a random song                                                        |
