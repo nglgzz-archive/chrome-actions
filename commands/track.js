@@ -32,13 +32,13 @@ const change = url => `
   chromix-too raw 'chrome.tabs.update' $tab '{"url": "${url}"}'
 `;
 
-// Goes back to the previous song.
-const back =  () =>
-  injectJS('history.back();');
-
 // Pause/Play the current song.
 const pause =  () =>
   injectJS('document.querySelector(".ytp-play-button").click();');
+
+// Goes back to the previous song.
+const back =  () =>
+  injectJS('history.back();');
 
 // Skip the current song.
 const next =  () =>

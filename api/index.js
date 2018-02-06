@@ -9,6 +9,9 @@ const router = express.Router();
 
 router.use('/track', track);
 
+router.get('/', (req, res) => {
+  res.send('Man page coming soon...');
+});
 
 // Handle any error inside the endpoints.
 router.use((err, req, res, next) => logger(err, res));

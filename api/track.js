@@ -12,14 +12,14 @@ router.get('/info', (req, res) => {
     .then(stdout => res.send(stdout));
 });
 
-router.get('/back', (req, res) => {
-  execCommand(track.back())
-    .then(() => res.send("Here's the last song!"));
-});
-
 router.get('/pause', (req, res) => {
   execCommand(track.pause())
     .then(() => res.send('The current song is now [un]paused!'));
+});
+
+router.get('/back', (req, res) => {
+  execCommand(track.back())
+    .then(() => res.send("Here's the last song!"));
 });
 
 router.get('/next', (req, res) => {
@@ -50,7 +50,7 @@ router.get('/change', (req, res) => {
     // Add a chance for the person that is making the song request to be
     // trolled.
     const rnd = Math.random();
-    if (rnd < 0.25) {
+    if (rnd < 0.10) {
       const rndIndex = Math.floor(Math.random() * trollSongs.length);
       url = trollSongs[rndIndex];
     }
@@ -75,10 +75,6 @@ router.get('/random', (req, res) => {
     execCommand(track.change(url))
       .then(() => res.send(`Now playing: ${name}`));
   });
-});
-
-router.get('/', (req, res) => {
-  res.send('Man page coming soon...');
 });
 
 
