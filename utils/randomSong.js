@@ -5,12 +5,15 @@ const randomWords = require('random-words');
 // here https://console.developers.google.com/apis
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 const youtubeSearch = query =>
+  `https://www.googleapis.com/youtube/v3/search?part=snippet&order=relevance&q=${query}&type=video&videoCategoryId=10&key=${YOUTUBE_API_KEY}`;
+
+const youtubeRandomSearch = query =>
   `https://www.googleapis.com/youtube/v3/search?part=snippet&order=viewCount&q=${query}&type=video&videoCategoryId=10&key=${YOUTUBE_API_KEY}`;
 
 
 const randomSong = async () => {
   const query = randomWords();
-  const { data } = await axios.get(youtubeSearch(query));
+  const { data } = await axios.get(youtubeRandomSearch(query));
   const rndIndex = Math.floor(Math.random() * data.items.length);
   const song = data.items[rndIndex];
 
@@ -21,5 +24,8 @@ const randomSong = async () => {
 };
 
 
-module.exports = randomSong;
+module.exports = {
+  youtubeSearch,
+  randomSong,
+};
 

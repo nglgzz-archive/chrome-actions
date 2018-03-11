@@ -1,8 +1,9 @@
 const express = require('express');
 const URL = require('url').URL;
+const axios = require('axios');
 const { track } = require('../commands');
 const { allowedDomains, trollSongs } = require('../constants');
-const { execCommand, errors, randomSong } = require('../utils');
+const { execCommand, errors, randomSong, youtubeSearch } = require('../utils');
 
 
 const router = express.Router();
@@ -36,8 +37,16 @@ router.get('/change', (req, res) => {
     try {
       url = new URL(url);
     } catch (err) {
-      console.log(url);
-      res.send('You need to specify a valid link (did you forget "https://"?)');
+      // In this case the user didn't specify the URL, but just the song name.
+      axios.get(youtubeSearch(url))
+        .then(({ data }) => {
+          const song = data.items[0];
+          const songURL = `https://www.youtube.com/watch?v=${song.id.videoId}`;
+          execCommand(track.change(songURL))
+                .then(() => res.send('Thank you for your song request!'));
+        });
+      // console.log(url);
+      // res.send('You need to specify a valid link (did you forget "https://"?)');
       return;
     }
 
