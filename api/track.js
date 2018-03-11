@@ -36,7 +36,7 @@ router.get('/change', (req, res) => {
     try {
       url = new URL(url);
     } catch (err) {
-      console.log(url);j
+      console.log(url);
       res.send('You need to specify a valid link (did you forget "https://"?)');
       return;
     }
@@ -62,7 +62,7 @@ router.get('/change', (req, res) => {
 
   // The URL was not specified, redirect to info, and return the current song's
   // name.
-  res.redirect('/track/info');
+  res.redirect('/info');
 });
 
 router.get('/random', (req, res) => {

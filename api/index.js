@@ -7,7 +7,7 @@ const { logger } = require('../utils/errors');
 const router = express.Router();
 
 
-router.use('/track', track);
+router.use('/', track);
 
 router.get('/', (req, res) => {
   res.send('Man page coming soon...');

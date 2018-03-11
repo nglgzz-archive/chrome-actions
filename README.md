@@ -22,9 +22,9 @@ description of what they do.
 | Enpoint         | Args  | Description                                                               |
 |-----------------|:-----:|---------------------------------------------------------------------------|
 | /               | -     | Get a list of commands                                                    |
-| /music/info     | -     | Return the name and URL for the current song                              |
-| /music/pause    | -     | Pause/Play the current song                                               |
-| /music/previous | -     | Play the previous song                                                    |
-| /music/next     | -     | Play the next song                                                        |
-| /music/change   | `url` | Change the current song to the specified URL (accepts only YouTube links) |
-| /music/random   | -     | Play a random song                                                        |
+| /info           | -     | Return the name and URL for the current song                              |
+| /pause          | -     | Pause/Play the current song                                               |
+| /previous       | -     | Play the previous song                                                    |
+| /next           | -     | Play the next song                                                        |
+| /change         | `url` | Change the current song to the specified URL (accepts only YouTube links) |
+| /random         | -     | Play a random song                                                        |
