@@ -26,5 +26,5 @@ description of what they do.
 | /pause          | -     | Pause/Play the current song                                               |
 | /previous       | -     | Play the previous song                                                    |
 | /next           | -     | Play the next song                                                        |
-| /change         | `url` | Change the current song to the specified URL (accepts only YouTube links) |
+| /change         | `url` | Change the current song to the specified URL (accepts YouTube links or song names) |
 | /random         | -     | Play a random song                                                        |
