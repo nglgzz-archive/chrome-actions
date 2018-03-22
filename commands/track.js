@@ -42,7 +42,8 @@ const back =  () =>
 
 // Skip the current song.
 const next =  () =>
-  injectJS('document.querySelector(".ytp-next-button").click();');
+    injectJS('document.querySelector("ytd-compact-video-renderer.ytd-watch-next-secondary-results-renderer a").click();');
+//  injectJS('document.querySelector(".ytp-next-button").click();');
 
 
 module.exports = {
