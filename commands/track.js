@@ -1,56 +1,61 @@
-// Get the first tab with youtube open (should be the one where we're playing
-// music).
-const tab = 'chromix-too ls | grep -P "listenonrepeat|youtube" | head -n1';
+const { Tabs } = require('chromix-three');
 
-// Assumes the output from the tab command is piped into this one, and it
-// returns the ID of the tab with youtube open.
-const ID = "cut -f 1 -d ' '";
+// Get the first pinned tab with LOR or YouTube open (should be the one where
+// we're playing music).
+const getTab = async () => {
+  return (await Tabs.filter(
+    { pinned: true },
+    { url: /listenonrepeat|youtube/i },
+  ))[0];
+};
 
-// Inject some given JS code into the tab that is playing youtube.
-const injectJS = js => `
-  tab=$(${tab} | ${ID}); \\
-  chromix-too raw 'chrome.tabs.executeScript' $tab '{"code": "${js
-    .replace(/"/g, '\\"')
-    .replace(/'/g, "'''")}"}'
-`;
-
-// List all open tabs on Chromium, get the first tab playing YouTube, get rid of
-// the ID of the tab, strip the "- YouTube" part from the title of the tab,
-// break the output in two lines, and reverse the order (so there's first the
-// title and then the URL)
-const info = () => `
-  ${tab} | \\
-  cut -f 1 -d ' ' --complement | \\
-  sed 's/ - YouTube/\\n/' | \\
-  sed 's/ - ListenOnRepeat/\\n/' | \\
-  sed 's/ /\\n🔊\t/' | \\
-  sort -r
-`;
-
-// Use chromix-too to get the ID of the first tab that is playing YouTube, and
-// then change the URL of that tab.
-const change = url => `
-  tab=$(${tab} | ${ID}); \\
-  chromix-too raw 'chrome.tabs.update' $tab '{"url": "${url}"}'
-`;
-
-// Pause/Play the current song.
-const pause = () =>
-  injectJS('document.querySelector(".ytp-play-button").click();');
-
-// Goes back to the previous song.
-const back = () => injectJS('history.back();');
-
-// Skip the current song.
-const next = () =>
-  injectJS(
-    'document.querySelector("ytd-compact-video-renderer.ytd-watch-next-secondary-results-renderer a").click();'
+// Get the name of the song playing by taking the title of the tab and stripping
+// YouTube/ListenOnRepeat.
+const info = () =>
+  getTab().then(({ info }) =>
+    info.title.replace(/ - (YouTube|ListenOnRepeat)/, ''),
   );
+
+const change = url => getTab().then(tab => tab.setURL(url));
+
+const pause = async () => {
+  const tab = await getTab();
+
+  if (/listenonrepeat/.test(tab.info.url)) {
+    return tab.executeScript('LOR.player.actions.togglePlayPause()', true);
+  }
+
+  return tab.executeScript(
+    'document.querySelector(".ytp-play-button").click()',
+  );
+};
+
+const back = async () => {
+  const tab = await getTab();
+
+  if (/listenonrepeat/.test(tab.info.url)) {
+    return tab.executeScript('LOR.player.actions.playPrev()', true);
+  }
+
+  return tab.goBack();
+};
+
+const next = async () => {
+  const tab = await getTab();
+
+  if (/listenonrepeat/.test(tab.info.url)) {
+    return tab.executeScript('LOR.player.actions.playNext()', true);
+  }
+
+  return tab.executeScript(
+    'document.querySelector("ytd-compact-video-renderer.ytd-watch-next-secondary-results-renderer a").click();',
+  );
+};
 
 module.exports = {
   info,
   change,
   back,
   pause,
-  next
+  next,
 };
