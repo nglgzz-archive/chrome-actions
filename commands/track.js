@@ -61,6 +61,34 @@ async function playNext() {
   return ytAction(tab, '.ytd-watch-next-secondary-results-renderer a');
 }
 
+async function goForward(skipTime = 5) {
+  const tab = await getTab();
+
+  if (PATTERN_LOR.test(tab.info.url)) {
+    return tab.executeScript(
+      `
+      const player = YT.get('player_1');
+      player.seekTo(player.getCurrentTime() + ${skipTime});
+    `,
+      true,
+    );
+  }
+}
+
+async function goBack(skipTime = 5) {
+  const tab = await getTab();
+
+  if (PATTERN_LOR.test(tab.info.url)) {
+    return tab.executeScript(
+      `
+      const player = YT.get('player_1');
+      player.seekTo(player.getCurrentTime() - ${skipTime});
+    `,
+      true,
+    );
+  }
+}
+
 async function toggleRepeat() {
   const tab = await getTab();
   const { url } = tab.info;
@@ -79,4 +107,6 @@ module.exports = {
   setURL,
   playPrev,
   playNext,
+  goBack,
+  goForward,
 };

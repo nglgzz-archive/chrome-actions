@@ -18,6 +18,8 @@ addRoute('togglePlayPause', _ => 'The current song is now [un]paused.');
 addRoute('toggleRepeat', _ => 'Toggled repeat for the current track.');
 addRoute('playPrev', _ => "Here's the previous song.");
 addRoute('playNext', _ => "Here's the next song.");
+addRoute('goForward', _ => 'Skipped 5 seconds.');
+addRoute('goBack', _ => 'Rewinded 5 seconds.');
 
 router.get('/change', (req, res) => {
   // Check if the URL was specified.
