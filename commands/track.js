@@ -1,61 +1,82 @@
 const { Tabs } = require('chromix-three');
+const { APIError } = require('../utils/errors');
 
-// Get the first pinned tab with LOR or YouTube open (should be the one where
-// we're playing music).
-const getTab = async () => {
-  return (await Tabs.filter(
-    { pinned: true },
-    { url: /listenonrepeat|youtube/i },
-  ))[0];
-};
+const PATTERN_ALL = /listenonrepeat|youtube/i;
+const PATTERN_LOR = /listenonrepeat/i;
+const PATTERN_YT = /youtube/i;
 
-// Get the name of the song playing by taking the title of the tab and stripping
-// YouTube/ListenOnRepeat.
-const info = () =>
-  getTab().then(({ info }) =>
-    info.title.replace(/ - (YouTube|ListenOnRepeat)/, ''),
-  );
+const ytAction = (tab, str) =>
+  tab.executeScript(`document.querySelector("${str}").click()`);
+const lorAction = (tab, str) =>
+  tab.executeScript(`LOR.player.actions.${str}`, true);
 
-const change = url => getTab().then(tab => tab.setURL(url));
+// Get the first pinned tab with Youtube or LOR open
+async function getTab() {
+  const tabs = await Tabs.filter({ pinned: true }, { url: PATTERN_ALL });
 
-const pause = async () => {
-  const tab = await getTab();
-
-  if (/listenonrepeat/.test(tab.info.url)) {
-    return tab.executeScript('LOR.player.actions.togglePlayPause()', true);
+  if (tabs.length === 0) {
+    throw new APIError(500, 'Music tab not found');
   }
 
-  return tab.executeScript(
-    'document.querySelector(".ytp-play-button").click()',
-  );
-};
+  return tabs[0];
+}
 
-const back = async () => {
+async function getInfo() {
+  const { info } = await getTab();
+  return info.title.replace(/ - (YouTube|ListenOnRepeat)/, '');
+}
+
+async function setURL(url) {
+  const tab = await getTab();
+  return tab.setUrl(url);
+}
+
+async function togglePlayPause() {
   const tab = await getTab();
 
-  if (/listenonrepeat/.test(tab.info.url)) {
-    return tab.executeScript('LOR.player.actions.playPrev()', true);
+  if (PATTERN_LOR.test(tab.info.url)) {
+    return lorAction(tab, 'togglePlayPause()');
+  }
+
+  return ytAction(tab, '.ytp-play-button');
+}
+
+async function playPrev() {
+  const tab = await getTab();
+
+  if (PATTERN_LOR.test(tab.info.url)) {
+    return lorAction(tab, 'playPrev()');
   }
 
   return tab.goBack();
-};
+}
 
-const next = async () => {
+async function playNext() {
   const tab = await getTab();
 
-  if (/listenonrepeat/.test(tab.info.url)) {
-    return tab.executeScript('LOR.player.actions.playNext()', true);
+  if (PATTERN_LOR.test(tab.info.url)) {
+    return lorAction(tab, 'playNext()');
   }
 
-  return tab.executeScript(
-    'document.querySelector("ytd-compact-video-renderer.ytd-watch-next-secondary-results-renderer a").click();',
-  );
-};
+  return ytAction(tab, '.ytd-watch-next-secondary-results-renderer a');
+}
+
+async function toggleRepeat() {
+  const tab = await getTab();
+  const { url } = tab.info;
+
+  if (PATTERN_LOR.test(url)) {
+    return tab.setURL(url.replace('listenonrepeat', 'youtube'));
+  }
+
+  return tab.setURL(url.replace('youtube', 'listenonrepeat'));
+}
 
 module.exports = {
-  info,
-  change,
-  back,
-  pause,
-  next,
+  getInfo,
+  togglePlayPause,
+  toggleRepeat,
+  setURL,
+  playPrev,
+  playNext,
 };

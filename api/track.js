@@ -7,21 +7,17 @@ const { errors, randomSong, youtubeSearch } = require('../utils');
 
 const router = express.Router();
 
-router.get('/info', (req, res) => {
-  track.info().then(info => res.send(info));
-});
+function addRoute(trackFn, resFn) {
+  router.get(`/${trackFn}`, (req, res) => {
+    track[trackFn]().then(data => res.send(resFn(data)));
+  });
+}
 
-router.get('/pause', (req, res) => {
-  track.pause().then(() => res.send('The current song is now [un]paused!'));
-});
-
-router.get('/back', (req, res) => {
-  track.back().then(() => res.send("Here's the last song!"));
-});
-
-router.get('/next', (req, res) => {
-  track.next().then(() => res.send("Here's the next song!"));
-});
+addRoute('getInfo', info => info);
+addRoute('togglePlayPause', _ => 'The current song is now [un]paused.');
+addRoute('toggleRepeat', _ => 'Toggled repeat for the current track.');
+addRoute('playPrev', _ => "Here's the previous song.");
+addRoute('playNext', _ => "Here's the next song.");
 
 router.get('/change', (req, res) => {
   // Check if the URL was specified.
@@ -36,9 +32,8 @@ router.get('/change', (req, res) => {
       axios.get(youtubeSearch(url)).then(({ data }) => {
         const song = data.items[0];
         const songURL = `https://www.youtube.com/watch?v=${song.id.videoId}`;
-        console.log(songURL);
         track
-          .change(songURL)
+          .setURL(songURL)
           .then(() => res.send('Thank you for your song request!'));
       });
       // console.log(url);
@@ -46,9 +41,9 @@ router.get('/change', (req, res) => {
       return;
     }
 
-    // Check that the URL is a youtube URL.
+    // Check that the URL is from a whitelisted domain.
     if (!allowedDomains.includes(url.hostname)) {
-      res.send('Only YouTube links are allowed.');
+      res.send('The URL specified is not allowed.');
       return;
     }
 
@@ -60,7 +55,7 @@ router.get('/change', (req, res) => {
       url = trollSongs[rndIndex];
     }
 
-    track.change(url).then(() => res.send('Thank you for your song request!'));
+    track.setURL(url).then(() => res.send('Thank you for your song request!'));
     return;
   }
 
