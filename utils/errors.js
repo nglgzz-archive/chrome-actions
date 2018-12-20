@@ -11,10 +11,8 @@ class APIError extends Error {
   }
 }
 
-
 function logger(err, res) {
-  // No response, later on we might want to handle this one differently (maybe
-  // Sentry or something similar).
+  // No response, later on we might want to handle this one differently.
   if (!res) {
     console.error(err);
     return;
@@ -30,7 +28,6 @@ function logger(err, res) {
   console.log(`[${err.name}:${err.statusCode}] ${err.message}`);
   res.send('Whoops.. There was a problem.');
 }
-
 
 module.exports = {
   APIError,
