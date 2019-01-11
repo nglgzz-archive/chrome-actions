@@ -28,7 +28,7 @@ async function getInfo() {
 
 async function setURL(url) {
   const tab = await getTab();
-  return tab.setUrl(url);
+  return tab.setURL(url);
 }
 
 async function togglePlayPause() {
