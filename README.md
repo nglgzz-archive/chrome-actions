@@ -25,15 +25,18 @@ The commands will be available at http://localhost:8268
 Below you can find all endpoints you can call, the arguments they accept and a
 description of what they do.
 
-| Enpoint | Args  | Description                                                                            |
-| ------- | :---: | -------------------------------------------------------------------------------------- |
-| /       |   -   | Get a list of commands                                                                 |
-| /info   |   -   | Return the name and URL for the current song                                           |
-| /pause  |   -   | Pause/Play the current song                                                            |
-| /back   |   -   | Play the previous song                                                                 |
-| /next   |   -   | Play the next song                                                                     |
-| /change | `url` | Change the current song to the specified URL (accepts YouTube/LOR links or song names) |
-| /random |   -   | Play a random song                                                                     |
+| Enpoint          | Args  | Description                                                                            |
+| ---------------- | :---: | -------------------------------------------------------------------------------------- |
+| /                |   -   | Get a list of commands                                                                 |
+| /getInfo         |   -   | Return the name and URL for the current song                                           |
+| /togglePlayPause |   -   | Pause/Play the current song                                                            |
+| /toggleRepeat    |   -   | Switch between YouTube and ListenOnRepeat                                              |
+| /playPrev        |   -   | Play the previous song                                                                 |
+| /playNext        |   -   | Play the next song                                                                     |
+| /goForward       |   -   | Skip 5 seconds                                                                         |
+| /goBack          |   -   | Go back 5 seconds                                                                      |
+| /change          | `url` | Change the current song to the specified URL (accepts YouTube/LOR links or song names) |
+| /random          |   -   | Play a random song                                                                     |
 
 ## Integration
 
